@@ -21,12 +21,41 @@ const registration = async (req: Request, res: Response) => {
       return res.status(201).json({ token });
     }
   } catch (err: any) {
-    console.log(err.message)
-    return res.status(500).json({message: "server error"})
+    console.log(err.message);
+    return res.status(500).json({ message: "server error" });
   }
 };
 
-
 const login = async (req: Request, res: Response) => {
-    
-}
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.json(400).json({ message: "no user exist" });
+
+    const isverified = await bcrypt.compare(password, user.password);
+    if (isverified && typeof process.env.SECRETKEY == "string") {
+      const payload = { user: { id: user._id } };
+      const token = jwt.sign(payload, process.env.SECRETKEY, {
+        expiresIn: "1h",
+      });
+      res.status(200).send({ token });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "server error" });
+  }
+};
+
+const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const payload = req.body.user;
+    if (payload && typeof process.env.SECRETKEY == "string") {
+      const refreshToken = jwt.sign(payload, process.env.SECRETKEY, {
+        expiresIn: "6h",
+      });
+      return res.status(200).json({ refreshToken });
+    }
+  } catch (error) {
+    res.json(500).json({ message: "server error" });
+  }
+};
