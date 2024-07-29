@@ -33,12 +33,16 @@ const login = async (req: Request, res: Response) => {
     if (!user) return res.json(400).json({ message: "no user exist" });
 
     const isverified = await bcrypt.compare(password, user.password);
+
+    if (!isverified)
+      return res.status(400).json({ message: "invalid credentials" });
+
     if (isverified && typeof process.env.SECRETKEY == "string") {
       const payload = { user: { id: user._id } };
       const token = jwt.sign(payload, process.env.SECRETKEY, {
         expiresIn: "1h",
       });
-      res.status(200).send({ token });
+      return res.status(200).json({ token });
     }
   } catch (error: any) {
     console.log(error.message);
