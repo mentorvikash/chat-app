@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentUser, login, register, logout } from "../services/auth";
 import { jwtDecode } from "jwt-decode";
 
@@ -18,7 +18,7 @@ interface IAuthProviderProps {
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
-export const AuthProvider = ({ children }: IAuthProviderProps) => {
+export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any>(getCurrentUser());
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: user,
         login: handleLogin,
         register: handleRegister,
         logout: handleLogout,
@@ -68,5 +68,4 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   );
 };
 
-export const useAuth = () => React.useContext(AuthContext);
-
+export const useAuth = () => useContext(AuthContext);
