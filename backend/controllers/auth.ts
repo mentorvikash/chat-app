@@ -30,7 +30,7 @@ const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.json(400).json({ message: "no user exist" });
+    if (!user) return res.status(400).json({ message: "no user exist" });
 
     const isverified = await bcrypt.compare(password, user.password);
 
@@ -63,5 +63,5 @@ const refreshToken = async (req: Request, res: Response) => {
     res.json(500).json({ message: "server error" });
   }
 };
-
+ 
 export { login, registration, refreshToken };

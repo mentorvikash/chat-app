@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import socketHandler from "../utils/socket";
 
 dotenv.config();
+// Note: When run test script comment databaseConnect() function.
 databaseConnect();
 const PORT: number = Number(process.env.PORT) || 4001;
 
@@ -18,7 +19,7 @@ const io = new Server(server);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use("/", authRoutes);
+app.use("/api/auth", authRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("welcome to home page");
 });
@@ -28,3 +29,6 @@ socketHandler(io)
 app.listen(PORT, () => {
   console.log("server is running at " + PORT);
 });
+
+
+export default app;
