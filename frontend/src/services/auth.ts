@@ -2,13 +2,13 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:5000/api/auth";
 
-interface IUser {
+export interface IUser {
   username?: string;
   email: string;
   password: string;
 }
 
-export const resister = async ({ email, password, username }: IUser) => {
+export const register = async ({ email, password, username }: IUser) => {
   return await axios.post(`${baseUrl}/signup`, {
     username,
     email,
