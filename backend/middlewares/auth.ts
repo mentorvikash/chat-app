@@ -23,4 +23,4 @@ const auth  = async (req: AuthRuquest, res: Response, next: NextFunction) => {
     }
 }
 
-export default auth;
+export {auth};

@@ -63,3 +63,5 @@ const refreshToken = async (req: Request, res: Response) => {
     res.json(500).json({ message: "server error" });
   }
 };
+
+export { login, registration, refreshToken };
